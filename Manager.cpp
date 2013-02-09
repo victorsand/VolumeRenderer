@@ -65,7 +65,7 @@ void Manager::InitWindow(int &_argc, char **_argv) {
 }
 
 void Manager::InitMatrices() {
-  // Set perspective, flip Z axis and set up camera
+  // Set perspective, flip coord system and set up camera
   proj_ = glm::perspective(40.f, 
                           (float)width_/(float)height_,
                           0.1f,

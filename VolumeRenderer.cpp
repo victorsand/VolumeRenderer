@@ -36,7 +36,7 @@ int main(int _argc, char * _argv) {
 
   // Create 3D texture and populate it
   VolumeTexture *volTex = VolumeTexture::New();
-  volTex->ReadFromFile("skull.raw", 8, 265);
+  volTex->ReadFromFile("skull.raw", 8, 256);
 
   // Bind the textures to the manager
   // (The manager takes care of the FBO binding in the rendering loop)

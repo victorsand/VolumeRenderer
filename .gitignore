@@ -12,8 +12,9 @@
 *.la
 *.a
 
+*.raw
+*.sdf
+
 Debug/
 Release/
 
-*.raw
-*.sdf
