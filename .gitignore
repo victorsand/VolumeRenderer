@@ -15,6 +15,5 @@
 Debug/
 Release/
 
-*.raw
-#*.sdf
-*.suo
+#*.raw
+*.sdf
