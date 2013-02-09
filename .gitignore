@@ -15,5 +15,5 @@
 Debug/
 Release/
 
-#*.raw
+*.raw
 *.sdf
