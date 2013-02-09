@@ -4,15 +4,20 @@ uniform sampler2D cubeFrontTex;
 uniform sampler2D cubeBackTex;
 uniform sampler3D volumeTex;
 
+uniform float stepSize;
+uniform float intensity;
+uniform float winSizeX;
+uniform float winSizeY;
+
+out vec4 color;
+
 void main() {
 
-	float delta = 0.01;
-	float amp = 9.f;
+	// Get window coordinates for cube texture sampling
+	float xSample = gl_FragCoord.x / winSizeX;
+	float ySample = gl_FragCoord.y / winSizeY;
 
-	float winSize = 600.0;
-	float xSample = gl_FragCoord.x / winSize;
-	float ySample = gl_FragCoord.y / winSize;
-
+	// Sample cube colors
 	vec4 front = texture(cubeFrontTex, vec2(xSample, ySample));
 	vec4 back = texture(cubeBackTex, vec2(xSample, ySample));
 
@@ -24,16 +29,17 @@ void main() {
 	float dirLength = length(direction);
 	direction = normalize(direction);
 
-	float intensity = 0.0;
+	float sum = 0.0;
 	vec3 sample = front.xyz;
 	float traversedLength = 0.f;
 	
+	// Sample volume
 	while (traversedLength < dirLength) {
-		sample += delta * direction;
-		traversedLength += delta;
-		intensity += texture(volumeTex, sample).r;
+		sample += stepSize * direction;
+		traversedLength += stepSize;
+		sum += texture(volumeTex, sample).r;
 	}
 
-	gl_FragColor = vec4(vec3(amp*delta*intensity), 1.0);// * 0.001 + vec4(vec3(front), 1);
+	color = vec4(vec3(intensity*stepSize*sum), 1.0);//  * 0.001 + vec4(vec3(front), 1);
 
 }

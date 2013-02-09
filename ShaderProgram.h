@@ -34,6 +34,8 @@ public:
                          GLenum _texUnit,
                          unsigned int _unitNumber,
                          VolumeTexture *_tex);
+  // Binds a float uniform to the shader program
+  void BindFloat(std::string _uniform, float _value);
   // Get location for named attribute
   unsigned int GetAttribLocation(std::string _attrib);
 

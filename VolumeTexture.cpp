@@ -29,15 +29,12 @@ void VolumeTexture::ReadFromFile(std::string _fileName, int _bits, int _dim) {
     inFileStream.read(buffer, bytes*nrVoxels);
     inFileStream.close();
 
-
     std::vector<float> floatBuffer;
     floatBuffer.resize(nrVoxels);
     for (int i=0; i<nrVoxels; i++) {
       float value=static_cast<float>(static_cast<int>(buffer[bytes*i]))/256.f;
       floatBuffer.at(i) = value;
     }
-
-
 
     delete buffer;
     std::cout << "Amount of read values: " << floatBuffer.size() << "\n";

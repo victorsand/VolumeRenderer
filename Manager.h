@@ -74,6 +74,10 @@ private:
   static Texture2D *cubeFrontTex_;
   static Texture2D *cubeBackTex_;
   static VolumeTexture *volumeTex_;
+
+  // Read a config file and bind constants to volume shader
+  static void BindShaderConstants();
+
 };
 
 #endif

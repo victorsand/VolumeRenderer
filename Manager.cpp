@@ -203,7 +203,17 @@ void Manager::BindTransformationMatrices(ShaderProgram * _program) {
   _program->BindMatrix4fv("projMatrix", &proj_[0][0]);
 }
 
+void Manager::BindShaderConstants() {
+  volumeShaderProg_->BindFloat("stepSize", 0.01);
+  volumeShaderProg_->BindFloat("intensity", 9.0);
+  volumeShaderProg_->BindFloat("winSizeX", 600.0);
+  volumeShaderProg_->BindFloat("winSizeY", 600.0);
+}
+
+
 void Manager::RenderScene() {
+  BindShaderConstants();
+
   UpdateMatrices();
   BindTransformationMatrices(cubeShaderProg_);
   BindTransformationMatrices(volumeShaderProg_);

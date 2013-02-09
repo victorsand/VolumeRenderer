@@ -111,6 +111,13 @@ unsigned int ShaderProgram::GetAttribLocation(std::string _attrib) {
   return glGetAttribLocation(programHandle_, _attrib.c_str());
 }
 
+void ShaderProgram::BindFloat(std::string _uniform, float _value) {
+  glUseProgram(programHandle_);
+  int location = glGetUniformLocation(programHandle_, _uniform.c_str());
+  glUniform1f(location, _value);
+  glUseProgram(0);
+}
+
 char * ShaderProgram::ReadTextFile(std::string _fileName) {
   FILE * inFile;
   char * content = NULL;
