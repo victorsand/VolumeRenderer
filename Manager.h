@@ -4,6 +4,10 @@
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 
+#include <vector>
+#include <string>
+#include <utility>
+
 class ShaderProgram;
 class Texture2D;
 class VolumeTexture;
@@ -26,6 +30,10 @@ public:
   void SetCubeFrontTexture(Texture2D *_texture);
   void SetCubeBackTexture(Texture2D *_texture);
   void SetVolumeTexture(VolumeTexture *_texture);
+  // Read a config file and bind float constants to volume shader
+  static void ReadConfigFile();
+  static void BindShaderConstants();
+  void SetConfigFileName(std::string _fileName);
 
 private:
   // Checks for OpenGL errors and prints them if present
@@ -75,8 +83,8 @@ private:
   static Texture2D *cubeBackTex_;
   static VolumeTexture *volumeTex_;
 
-  // Read a config file and bind constants to volume shader
-  static void BindShaderConstants();
+  static std::vector< std::pair<std::string, float> > constants_;
+  static std::string configFileName_;
 
 };
 

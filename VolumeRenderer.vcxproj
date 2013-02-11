@@ -82,6 +82,9 @@
     <None Include="volumeFrag.glsl" />
     <None Include="volumeVert.glsl" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="constants.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

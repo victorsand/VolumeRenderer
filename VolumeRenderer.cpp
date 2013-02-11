@@ -44,6 +44,10 @@ int main(int _argc, char * _argv) {
   Manager::Instance().SetCubeBackTexture(cubeBackTex);
   Manager::Instance().SetVolumeTexture(volTex);
 
+  // Read constants from file
+  Manager::Instance().SetConfigFileName("constants.txt");
+  Manager::Instance().ReadConfigFile();
+
   // Now we have everything to fire up the buffers
   Manager::Instance().InitFramebuffer();
 

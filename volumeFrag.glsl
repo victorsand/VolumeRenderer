@@ -25,10 +25,12 @@ void main() {
 	front.xyz = vec3(front.z, 1.0-front.x, 1.0-front.y);
 	back.xyz = vec3(back.z, 1.0-back.x, 1.0-back.y);
 
+	// Calculate viewing direction and cross-section length
 	vec3 direction = (back-front).xyz;
 	float dirLength = length(direction);
 	direction = normalize(direction);
 
+	// Init traversal
 	float sum = 0.0;
 	vec3 sample = front.xyz;
 	float traversedLength = 0.f;

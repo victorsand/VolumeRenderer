@@ -5,6 +5,7 @@
 #include <gl\glew.h>
 #include <gl\glut.h>
 #include <iostream>
+#include <fstream>
 
 // Static definitions
 unsigned int Manager::cubePositionBufferObject_;
@@ -26,6 +27,8 @@ ShaderProgram *Manager::volumeShaderProg_;
 Texture2D *Manager::cubeFrontTex_;
 Texture2D *Manager::cubeBackTex_;
 VolumeTexture *Manager::volumeTex_;
+std::vector< std::pair<std::string, float> > Manager::constants_ ;
+std::string Manager::configFileName_;
 
 Manager& Manager::Instance() {
   static Manager instance;
@@ -197,6 +200,24 @@ void Manager::UpdateMatrices() {
   CheckGLErrors();
 }
 
+void Manager::ReadConfigFile() {
+  std::ifstream inFileStream;
+  inFileStream.open(configFileName_.c_str());
+  if (inFileStream.is_open()) {
+    std::string uniform;
+    float value;
+    while (!inFileStream.eof()) {
+      inFileStream >> uniform;
+      inFileStream >> value;
+      std::cout << "Reading " << uniform << " = " << value << "\n";
+      constants_.push_back(std::make_pair(uniform, value));
+    }
+  } else {
+    std::cout << "Error: Could not open config file\n";
+    exit(1);
+  }
+}
+
 void Manager::BindTransformationMatrices(ShaderProgram * _program) {
   _program->BindMatrix4fv("modelMatrix", &model_[0][0]);
   _program->BindMatrix4fv("viewMatrix", &view_[0][0]);
@@ -204,12 +225,11 @@ void Manager::BindTransformationMatrices(ShaderProgram * _program) {
 }
 
 void Manager::BindShaderConstants() {
-  volumeShaderProg_->BindFloat("stepSize", 0.01);
-  volumeShaderProg_->BindFloat("intensity", 9.0);
-  volumeShaderProg_->BindFloat("winSizeX", 600.0);
-  volumeShaderProg_->BindFloat("winSizeY", 600.0);
+  std::vector< std::pair<std::string, float> >::iterator it;
+  for (it=constants_.begin(); it!=constants_.end(); it++) {
+    volumeShaderProg_->BindFloat((*it).first, (*it).second);
+  }
 }
-
 
 void Manager::RenderScene() {
   BindShaderConstants();
@@ -220,8 +240,6 @@ void Manager::RenderScene() {
 
   glUseProgram(cubeShaderProg_->Handle());
 
-  
-  
   // Render cube front
   glBindFramebuffer(GL_FRAMEBUFFER, cubeFrontFBO_);
   CullBackFace();
@@ -303,6 +321,9 @@ void Manager::SetCubeBackTexture(Texture2D *_texture) {
 void Manager::SetVolumeTexture(VolumeTexture *_texture) {
   volumeTex_ = _texture;
 }
+void Manager::SetConfigFileName(std::string _fileName) {
+  configFileName_ = _fileName;
+}
 
 unsigned int Manager::CheckGLErrors() {
   unsigned int error = glGetError();
@@ -342,6 +363,16 @@ void Manager::ChangeSize(int _width, int _height) {
 }
 
 void Manager::Keyboard(unsigned char _key, int _x, int _y) {
+  switch (_key) {
+  case 'r':
+  case 'R':
+    ReadConfigFile();
+    break;
+  case 'q':
+  case 'Q':
+    exit(0);
+    break;
+   }
 }
 
 void Manager::MouseButtons(int _button, int _state, int _x, int _y) {
