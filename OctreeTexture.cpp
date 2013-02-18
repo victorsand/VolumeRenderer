@@ -45,8 +45,8 @@ void OctreeTexture::ReadFromFile(std::string _fileName, int _bits, int _dim) {
 
     // Level to be written to, starting at second to lowest
     int level = nrLevels - 1;
-    // Dimensions for level to be read from
-    int levelDim = _dim;
+    // Dimensions for level to be read to
+    int levelDim = _dim/2;
     // Offset into index array for level to be written to
     int offsetWrite = levelDim*levelDim*levelDim;;
     // Offset into index array for level to be read from

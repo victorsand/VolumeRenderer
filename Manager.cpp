@@ -63,7 +63,7 @@ void Manager::InitWindow(int &_argc, char **_argv) {
     std::cout << "Using GLEW " << glewGetString(GLEW_VERSION) << std::endl;
   }
 
-  glClearColor(.3f, .3f, .3f, 1.f);
+  glClearColor(.0f, .0f, .0f, 1.f);
   CheckGLErrors();
 }
 
