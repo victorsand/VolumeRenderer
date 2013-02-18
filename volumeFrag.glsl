@@ -33,7 +33,7 @@ void main() {
 	// Init traversal
 	float sum = 0.0;
 	vec3 sample = front.xyz;
-	float traversedLength = 0.f;
+	float traversedLength = 0.0;
 	
 	// Sample volume
 	while (traversedLength < dirLength) {

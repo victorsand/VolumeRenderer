@@ -201,6 +201,7 @@ void Manager::UpdateMatrices() {
 }
 
 void Manager::ReadConfigFile() {
+  // Assuming text file contains uniform name + float value on each row
   std::ifstream inFileStream;
   inFileStream.open(configFileName_.c_str());
   if (inFileStream.is_open()) {
@@ -209,7 +210,6 @@ void Manager::ReadConfigFile() {
     while (!inFileStream.eof()) {
       inFileStream >> uniform;
       inFileStream >> value;
-      std::cout << "Reading " << uniform << " = " << value << "\n";
       constants_.push_back(std::make_pair(uniform, value));
     }
   } else {

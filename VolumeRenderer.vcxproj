@@ -65,11 +65,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Manager.h" />
+    <ClInclude Include="OctreeTexture.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="VolumeTexture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Manager.cpp" />
+    <ClCompile Include="OctreeTexture.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="VolumeRenderer.cpp" />
