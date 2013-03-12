@@ -69,6 +69,143 @@ bool IntersectCube(in vec3 boundsMin,
 	return ( (tMin < 1e20 && tMax > -1e20 ) );
 }
 
+int GetRootOffset()
+{
+	return 0;
+}
+
+bool IsLeaf(in int nodeOffset) 
+{
+	return true;
+}
+
+int GetChildNodeOffset(in int nodeOffset, in int child, in int level)
+{
+  return 1;
+}
+
+int EnclosingChild(vec3 P, float boxMid, vec3 offset)
+{
+	if (P.x < boxMid+offset.x)
+	{
+		// 0, 2, 6 or 4
+		if (P.y < boxMid+offset.y) 
+		{
+			// 0 or 6
+			if (P.z < boxMid+offset.z) return 0;
+			else return 6;
+		}
+		else
+		{
+			// 2 or 4
+			if (P.z < boxMid+offset.z) return 2;
+			else return 4;
+	  }
+	}
+	else
+	{
+		// 1, 3 5 or 7
+		if (P.y < boxMid+offset.y) 
+    {
+      // 1 or 7
+      if (P.z < boxMid+offset.z) return 1;
+      else return 7;
+    }
+    else
+    {
+      // 3 or 5
+      if (P.z < boxMid+offset.z) return 3;
+      else return 5;
+    }
+}
+ 
+// Traverse the octree structure and return an accumulated color
+vec3 Traverse(in vec3 rayO, in vec3 rayD)
+{
+  float boxDim, boxMid, boxMin, xOff, yOff, zOff;
+	int nodeOffset, level;
+  vec3 color = vec3(0.0);
+
+	// Find tMin and tMax for unit cube
+	float tMin, tMax;
+	if (!IntersectCube(vec3(0.0), vec3(1.0), rayO, rayD, tMin, tMax) 
+	{
+		return;
+	} 
+
+	// Keep traversing until the sample point goes outside the unit square
+	while (tMin < tMax) 
+	{
+		// Reset the traversal variables
+		vec3 offset = vec3(0.0);
+		boxDim = 1.0;
+    level = 0;
+
+		// Set node to root
+		nodeOffset = GetRoot();
+
+		// Find the point P where the ray intersects the bounding volume
+		vec3 P = vec3(rayO + tMin*rayD);
+
+		// Traverse to the selected level
+		while (!IsLeaf(nodeOffset)) 
+		{
+			// Next box dimenstions
+			boxDim /= 2.0;
+
+			// Current mid point
+			boxMid = boxDim;
+		
+			// Check which child encloses P
+			int child = enclosingChild(P, boxMid, offset);
+      
+      // Get new node
+      node = GetChildNodeOffset(node, child, level);
+
+      // Handle the child cases
+      if (child == 0 || child == 2 || child == 4 || child == 6)
+      {
+        if (child == 0 || child == 6)
+        {
+          if (child == 6) offset.z += boxDim;
+        }
+        else
+        {
+          if (child == 4) offset.z += boxDim;
+          offset.y += boxDim;
+      }
+      else 
+      {
+        if (child == 1 || child == 7)
+        {
+          if (child == 7) offset.z += boxDim;
+        }
+        else 
+        {
+          if (child == 5) offset.z += boxDim;
+          offset.y += boxDim;
+        }
+        offset.x += boxDim;
+      }
+      
+      // If we are at the wanted level, raymarch the subvolume
+      if (IsLeaf(nodeOffset))
+      {
+        // Raymarch, add to the color
+      }
+     
+      // Find tMax for the recently visited node
+      float tMinNode, tMaxNode;
+      IntersectCube(offset, offset+boxDim, rayO, rayD, tMinNode, tMaxNode);
+
+      // Set tMin for next iteration
+      tMin = tMaxNode;
+       
+    } // while !IsLeaf
+  } // while tMin < tMax
+  return color;
+} // Traverse()
+
 out vec4 color;
 
 void main() {
