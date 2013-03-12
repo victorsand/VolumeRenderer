@@ -24,11 +24,9 @@ bool IntersectCube(in vec3 boundsMin,
 				   out float tMinOut,
 				   out float tMaxOut)
 {
-	float tMin = 9999.0;
-	float tMax = -9999.0;
-	float tYMin, tYMax, tZMin, tZMax;
-	float divx = 1.0 / rayD.x;
-	if (rayD.x >= 0.0)
+	float tMin, tMax, tYMin, tYMax, tZMin, tZMax;
+	float divx = (rayD.x == 0.0) ? 1e20 : 1.0/rayD.x;
+	if (divx >= 0.0)
 	{	
 		tMin = (boundsMin.x - rayO.x) * divx;
 		tMax = (boundsMax.x - rayO.x) * divx;
@@ -38,8 +36,8 @@ bool IntersectCube(in vec3 boundsMin,
 		tMin = (boundsMax.x - rayO.x) * divx;
 		tMax = (boundsMin.x - rayO.x) * divx;
 	}
-	float divy = 1.0 / rayD.y;
-	if (rayD.y >= 0.0)
+	float divy = (rayD.y == 0.0) ? 1e20 : 1.0/rayD.y;
+	if (divy >= 0.0)
 	{	
 		tYMin = (boundsMin.y - rayO.y) * divy;
 		tYMax = (boundsMax.y - rayO.y) * divy;
@@ -52,8 +50,8 @@ bool IntersectCube(in vec3 boundsMin,
 	if ( (tMin > tYMax || tYMin > tMax) ) return false;
 	if (tYMin > tMin) tMin = tYMin;
 	if (tYMax < tMax) tMax = tYMax;
-	float divz  = 1.0 / rayD.z;
-	if (rayD.z >= 0.0)
+	float divz = (rayD.z == 0.0) ? 1e20 : 1.0/rayD.z;
+	if (divz >= 0.0)
 	{	
 		tZMin = (boundsMin.z - rayO.z) * divz;
 		tZMax = (boundsMax.z - rayO.z) * divz;
@@ -68,7 +66,7 @@ bool IntersectCube(in vec3 boundsMin,
 	if (tZMax < tMax) tMax = tZMax;
 	tMinOut = tMin;
 	tMaxOut = tMax;
-	return ( (tMin < 999.0 && tMax > -999.0 ) );
+	return ( (tMin < 1e20 && tMax > -1e20 ) );
 }
 
 out vec4 color;
@@ -95,17 +93,18 @@ void main() {
 	// Check ray intersection with unit cube
 	float tMax;
 	float tMin;
-	vec4 c = vec4(0);
-	vec3 rayStart = front.xyz - 10.0 * direction;
+	vec4 c = vec4(0.2);
+	vec3 rayStart = front.xyz - 1.0 * direction;
 	if (IntersectCube(vec3(0.0, 0.0, 0.0),
-					  vec3(1.0, 1.0, 1.0),
+					  vec3(0.5, 0.5, 0.5),
 					  rayStart,
 					  direction, 
 					  tMin,
 					  tMax))
 	{
-		c = vec4(rayStart + tMin*direction.xyz, 1.f);
+		c = vec4(1);
 	}
+
 
 	/*
 	// Init traversal
