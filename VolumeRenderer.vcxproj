@@ -65,13 +65,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Manager.h" />
-    <ClInclude Include="OctreeTexture.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="VolumeTexture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Manager.cpp" />
-    <ClCompile Include="OctreeTexture.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="VolumeRenderer.cpp" />
@@ -80,6 +78,8 @@
   <ItemGroup>
     <None Include="cubeFrag.glsl" />
     <None Include="cubeVert.glsl" />
+    <None Include="octreeFrag.glsl" />
+    <None Include="octreeVert.glsl" />
     <None Include="Texture2D.h" />
     <None Include="volumeFrag.glsl" />
     <None Include="volumeVert.glsl" />

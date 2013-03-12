@@ -24,9 +24,6 @@
     <ClInclude Include="VolumeTexture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OctreeTexture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ShaderProgram.cpp">
@@ -44,9 +41,6 @@
     <ClCompile Include="VolumeTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OctreeTexture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Texture2D.h">
@@ -62,6 +56,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="volumeVert.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="octreeFrag.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="octreeVert.glsl">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
