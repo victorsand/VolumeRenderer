@@ -81,8 +81,17 @@ bool IsLeaf(in int nodeOffset)
 
 int GetChildNodeOffset(in int nodeOffset, in int child, in int level)
 {
-  return 1;
+  return 0;
 }
+
+vec3 VisitNode(in int nodeOffset, 
+               in vec3 rayO,
+               in vec3 rayD, 
+               in float tMinNode,
+               in float tMaxNode)
+{
+  return vec3(0.0);
+} 
 
 int EnclosingChild(vec3 P, float boxMid, vec3 offset)
 {
@@ -117,6 +126,7 @@ int EnclosingChild(vec3 P, float boxMid, vec3 offset)
       if (P.z < boxMid+offset.z) return 3;
       else return 5;
     }
+  }
 }
  
 // Traverse the octree structure and return an accumulated color
@@ -128,21 +138,21 @@ vec3 Traverse(in vec3 rayO, in vec3 rayD)
 
 	// Find tMin and tMax for unit cube
 	float tMin, tMax;
-	if (!IntersectCube(vec3(0.0), vec3(1.0), rayO, rayD, tMin, tMax) 
+	if (!IntersectCube(vec3(0.0), vec3(1.0), rayO, rayD, tMin, tMax))
 	{
-		return;
+		return vec3(0.0);
 	} 
 
 	// Keep traversing until the sample point goes outside the unit square
-	while (tMin < tMax) 
-	{
+	//while (tMin < tMax) 
+	//{
 		// Reset the traversal variables
 		vec3 offset = vec3(0.0);
 		boxDim = 1.0;
     level = 0;
 
 		// Set node to root
-		nodeOffset = GetRoot();
+		nodeOffset = GetRootOffset();
 
 		// Find the point P where the ray intersects the bounding volume
 		vec3 P = vec3(rayO + tMin*rayD);
@@ -155,12 +165,12 @@ vec3 Traverse(in vec3 rayO, in vec3 rayD)
 
 			// Current mid point
 			boxMid = boxDim;
-		
+
 			// Check which child encloses P
-			int child = enclosingChild(P, boxMid, offset);
-      
+      int child = EnclosingChild(P, boxMid, offset);
+
       // Get new node
-      node = GetChildNodeOffset(node, child, level);
+      nodeOffset = GetChildNodeOffset(nodeOffset, child, level);
 
       // Handle the child cases
       if (child == 0 || child == 2 || child == 4 || child == 6)
@@ -173,6 +183,7 @@ vec3 Traverse(in vec3 rayO, in vec3 rayD)
         {
           if (child == 4) offset.z += boxDim;
           offset.y += boxDim;
+        }
       }
       else 
       {
@@ -188,21 +199,18 @@ vec3 Traverse(in vec3 rayO, in vec3 rayD)
         offset.x += boxDim;
       }
       
-      // If we are at the wanted level, raymarch the subvolume
-      if (IsLeaf(nodeOffset))
-      {
-        // Raymarch, add to the color
-      }
-     
-      // Find tMax for the recently visited node
+      // Find tMax for the node to visit 
       float tMinNode, tMaxNode;
       IntersectCube(offset, offset+boxDim, rayO, rayD, tMinNode, tMaxNode);
 
       // Set tMin for next iteration
       tMin = tMaxNode;
+      
+      // Raymarch, add to the color
+      color += VisitNode(nodeOffset, rayO, rayD, tMinNode, tMaxNode);
        
     } // while !IsLeaf
-  } // while tMin < tMax
+  //} // while tMin < tMax
   return color;
 } // Traverse()
 
@@ -224,38 +232,10 @@ void main() {
 
 	// Calculate viewing direction and cross-section length
 	vec3 direction = (back-front).xyz;
-	float dirLength = length(direction);
 	direction = normalize(direction);
 
-	// Check ray intersection with unit cube
-	float tMax;
-	float tMin;
-	vec4 c = vec4(0.2);
+	// Traverse structure
 	vec3 rayStart = front.xyz - 1.0 * direction;
-	if (IntersectCube(vec3(0.0, 0.0, 0.0),
-					  vec3(0.5, 0.5, 0.5),
-					  rayStart,
-					  direction, 
-					  tMin,
-					  tMax))
-	{
-		c = vec4(1);
-	}
-
-
-	/*
-	// Init traversal
-	float sum = 0.0;
-	vec3 sample = front.xyz;
-	float traversedLength = 0.0;
-	
-	// Sample volume
-	while (traversedLength < dirLength) {
-		sample += stepSize * direction;
-		traversedLength += stepSize;
-		sum += texture(volumeTex, sample).r;
-	}
-	*/
-	color = c;// vec4(vec3(intensity*stepSize*sum), 1.0);//  * 0.001 + vec4(vec3(front), 1);
+  color = vec4(Traverse(rayStart, direction), 1.0);
 
 }

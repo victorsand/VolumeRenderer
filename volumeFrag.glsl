@@ -39,7 +39,7 @@ void main() {
 	while (traversedLength < dirLength) {
 		sample += stepSize * direction;
 		traversedLength += stepSize;
-		sum += texture(volumeTex, sample).r;
+		sum += textureOffset(volumeTex, sample, ivec3(256+128+64+32+16)).r;
 	}
 
 	color = vec4(vec3(intensity*stepSize*sum), 1.0);//  * 0.001 + vec4(vec3(front), 1);
