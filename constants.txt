@@ -1,5 +1,4 @@
 winSizeX 600.0
 winSizeY 600.0
 stepSize 0.01
-intensity 10.0;
-
+intensity 1

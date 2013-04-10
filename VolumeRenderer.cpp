@@ -20,8 +20,8 @@ int main(int _argc, char * _argv) {
   cubeShaderProg->CreateShader(ShaderProgram::FRAGMENT, "cubeFrag.glsl");
   cubeShaderProg->CreateProgram();
   ShaderProgram *volumeShaderProg = ShaderProgram::New();
-  volumeShaderProg->CreateShader(ShaderProgram::VERTEX, "volumeVert.glsl");
-  volumeShaderProg->CreateShader(ShaderProgram::FRAGMENT, "volumeFrag.glsl");
+  volumeShaderProg->CreateShader(ShaderProgram::VERTEX, "octreeVert.glsl");
+  volumeShaderProg->CreateShader(ShaderProgram::FRAGMENT, "octreeFrag.glsl");
   volumeShaderProg->CreateProgram();
 
   // Bind shader programs to manager

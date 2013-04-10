@@ -36,6 +36,8 @@ public:
                          VolumeTexture *_tex);
   // Binds a float uniform to the shader program
   void BindFloat(std::string _uniform, float _value); 
+  // Binds an integer uniform to the shader program
+  void BindInt(std::string _uniform, int _value);
   // Get location for named attribute
   unsigned int GetAttribLocation(std::string _attrib);
 

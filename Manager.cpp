@@ -1,4 +1,4 @@
-#include "Manager.h"
+﻿#include "Manager.h"
 #include "ShaderProgram.h"
 #include "Texture2D.h"
 #include "VolumeTexture.h"
@@ -44,7 +44,7 @@ void Manager::InitWindow(int &_argc, char **_argv) {
   std::cout << "Initializing GLEW and GLUT\n";
   glutInit(&_argc, _argv);
   glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA | GLUT_MULTISAMPLE);
-  glutInitWindowPosition(200, 200);
+  glutInitWindowPosition(50, 50);
   glutInitWindowSize(width_, height_);
   glutCreateWindow("Volume renderer - Victor Sand");
   std::cout << "Window initialized\n\n";
@@ -232,6 +232,9 @@ void Manager::BindShaderConstants() {
 }
 
 void Manager::RenderScene() {
+
+  CheckGLErrors("RenderScene() start");
+
   BindShaderConstants();
 
   UpdateMatrices();
@@ -251,6 +254,7 @@ void Manager::RenderScene() {
   GLenum frontBuffer[1] = { GL_COLOR_ATTACHMENT0 };
   //glDrawBuffers(1, frontBuffer);
   glDrawArrays(GL_TRIANGLES, 0, 144);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
   glDisableVertexAttribArray(cubePositionAttrib_);
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   
@@ -265,6 +269,7 @@ void Manager::RenderScene() {
   GLenum backBuffer[1] = { GL_COLOR_ATTACHMENT1 };
   //glDrawBuffers(1, backBuffer);
   glDrawArrays(GL_TRIANGLES, 0, 144);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
   glDisableVertexAttribArray(cubePositionAttrib_);
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -279,10 +284,11 @@ void Manager::RenderScene() {
                                     GL_TEXTURE1,
                                     1,
                                     cubeBackTex_);
+  
   volumeShaderProg_->BindVolumeTexture("volumeTex",
                                        GL_TEXTURE2,
                                        2,
-                                       volumeTex_);
+                                       volumeTex_);                                     
 
   glUseProgram(volumeShaderProg_->Handle());
   
@@ -294,12 +300,13 @@ void Manager::RenderScene() {
   glEnableVertexAttribArray(cubePositionAttrib_);
   glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
   glDrawArrays(GL_TRIANGLES, 0, 144);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
   glDisableVertexAttribArray(cubePositionAttrib_);
  
   glUseProgram(0);
   glutSwapBuffers();
   glutPostRedisplay();
-  CheckGLErrors();
+  CheckGLErrors("RenderScene() end");
 }
 
 void Manager::SetCubeShaderProgram(ShaderProgram *_program) {
@@ -320,39 +327,41 @@ void Manager::SetCubeBackTexture(Texture2D *_texture) {
 
 void Manager::SetVolumeTexture(VolumeTexture *_texture) {
   volumeTex_ = _texture;
+  // TODO move this somewhere sensible
+  volumeShaderProg_->BindInt("maxDepth", volumeTex_->MaxDepth());
 }
 void Manager::SetConfigFileName(std::string _fileName) {
   configFileName_ = _fileName;
 }
 
-unsigned int Manager::CheckGLErrors() {
+unsigned int Manager::CheckGLErrors(std::string _location) {
   unsigned int error = glGetError();
   switch (error) {
   case GL_NO_ERROR:
     break;
   case GL_INVALID_ENUM:
-    std::cout << "GL_INVALID_ENUM\n";
+    std::cout << _location << " GL_INVALID_ENUM\n";
     break;
   case GL_INVALID_VALUE:
-      std::cout << "GL_INVALID_VALUE\n";
-      break;
+    std::cout << _location << " GL_INVALID_VALUE\n";
+    break;
   case GL_INVALID_OPERATION:
-    std::cout << "GL_INVALID_OPERATION\n";
-      break;
+    std::cout << _location << " GL_INVALID_OPERATION\n";
+    break;
   case GL_STACK_OVERFLOW:
-    std::cout << "GL_STACK_OVERFLOW\n";
+    std::cout << _location << " GL_STACK_OVERFLOW\n";
     break;
   case GL_STACK_UNDERFLOW:
-    std::cout << "GL_STACK_UNDERFLOW\n";
+    std::cout << _location << " GL_STACK_UNDERFLOW\n";
     break;
   case GL_OUT_OF_MEMORY:
-    std::cout << "GL_OUT_OF_MEMORY\n";
+    std::cout << _location <<  " GL_OUT_OF_MEMORY\n";
     break;
   case GL_INVALID_FRAMEBUFFER_OPERATION:
-    std::cout << "GL_INVALID_FRAMEBUFFER_OPERATION\n";
+    std::cout <<  _location << " GL_INVALID_FRAMEBUFFER_OPERATION\n";
     break;
   case GL_TABLE_TOO_LARGE:
-    std::cout << "GL_TABLE_TOO_LARGE\n";
+    std::cout <<  _location << " GL_TABLE_TOO_LARGE\n";
     break;
   }
   return error;

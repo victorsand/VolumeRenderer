@@ -2,7 +2,7 @@
 
 uniform sampler2D cubeFrontTex;
 uniform sampler2D cubeBackTex;
-uniform sampler3D volumeTex;
+uniform samplerBuffer volumeTex;
 
 uniform float stepSize;
 uniform float intensity;
@@ -39,7 +39,7 @@ void main() {
 	while (traversedLength < dirLength) {
 		sample += stepSize * direction;
 		traversedLength += stepSize;
-		sum += textureOffset(volumeTex, sample, ivec3(256+128+64+32+16)).r;
+		sum += texelFetch(volumeTex, int(256.0*sample.x*pow(256.0, 0.0)) + int(256.0*sample.y*pow(256.0, 1.0)) + int(256.0*sample.z*pow(256.0, 2.0)));
 	}
 
 	color = vec4(vec3(intensity*stepSize*sum), 1.0);//  * 0.001 + vec4(vec3(front), 1);

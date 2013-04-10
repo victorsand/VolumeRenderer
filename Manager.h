@@ -35,9 +35,11 @@ public:
   static void BindShaderConstants();
   void SetConfigFileName(std::string _fileName);
 
+    // Checks for OpenGL errors and prints them if present
+  static unsigned int CheckGLErrors(std::string _location = "");
+
 private:
-  // Checks for OpenGL errors and prints them if present
-  static unsigned int CheckGLErrors();
+
   // Update matrices with current view params
   static void UpdateMatrices();
   // For clarity, functions that sets the culling mode

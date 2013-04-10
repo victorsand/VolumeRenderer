@@ -10,10 +10,12 @@ public:
   // Params: filename, bits per voxel in raw data, dimensions (assuming cube)
   void ReadFromFile(std::string _fileName, int _bits, int _dim);
   unsigned int Handle() { return handle_; }
+  unsigned int MaxDepth() { return maxDepth_; }
 private:
   VolumeTexture() {}
   VolumeTexture(const VolumeTexture&) {}
   unsigned int handle_;
+  unsigned int maxDepth_;
 };
 
 #endif

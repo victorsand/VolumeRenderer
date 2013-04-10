@@ -1,4 +1,5 @@
 #define _CRT_SECURE_NO_DEPRECATE // Get rid of fopen warning
+
 #include "ShaderProgram.h"
 #include "Texture2D.h"
 #include "VolumeTexture.h"
@@ -100,10 +101,9 @@ void ShaderProgram::BindVolumeTexture(std::string _uniform,
                                       VolumeTexture *_tex) {
   glUseProgram(programHandle_);
   glActiveTexture(_texUnit);
-  glEnable(GL_TEXTURE_3D);
   int location = glGetUniformLocation(programHandle_, _uniform.c_str());
   glUniform1i(location, _unitNumber);
-  glBindTexture(GL_TEXTURE_3D, _tex->Handle());
+  glBindTexture(GL_TEXTURE_BUFFER, _tex->Handle());
   glUseProgram(0);                                    
 }
 
@@ -115,6 +115,14 @@ void ShaderProgram::BindFloat(std::string _uniform, float _value) {
   glUseProgram(programHandle_);
   int location = glGetUniformLocation(programHandle_, _uniform.c_str());
   glUniform1f(location, _value);
+  glUseProgram(0);
+}
+
+void ShaderProgram::BindInt(std::string _uniform, int _value) {
+  std::cout << "Binding " << _uniform << " = " << _value << std::endl;
+  glUseProgram(programHandle_);
+  int location = glGetUniformLocation(programHandle_, _uniform.c_str());
+  glUniform1i(location, _value);
   glUseProgram(0);
 }
 
